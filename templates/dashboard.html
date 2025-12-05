@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row mb-4">
+  <div class="col-lg-7 mb-4 mb-lg-0">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Monitor URLs</h5>
+        <p class="text-muted mb-3">
+          Paste one or more URLs below (PDF or web pages), one per line.
+          When you save, the tool will immediately fetch each new URL once
+          and store its initial MD5 hash.
+        </p>
+
+        <form method="post" action="{{ url_for('dashboard') }}">
+          <div class="mb-3">
+            <label for="bulk_urls" class="form-label">URL list</label>
+            <textarea class="form-control" id="bulk_urls" name="bulk_urls"
+                      rows="6"
+                      placeholder="https://example.com/doc1.pdf&#10;https://example.com/doc2.pdf"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            Save URLs & index hashes
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title mb-3">Monitoring & Reports</h5>
+        <p class="text-muted">
+          Use an ad-hoc run to check all URLs immediately, or wait for the
+          scheduled job based on the frequency configured in Settings.
+          Excel reports are generated only for scheduled and ad-hoc runs.
+        </p>
+
+        <div class="mt-2 mb-3 d-flex flex-wrap gap-2">
+          <form method="post" action="{{ url_for('run_now') }}" id="runNowForm">
+            <button type="submit" class="btn btn-success" id="runNowBtn">
+              Run check now
+            </button>
+          </form>
+          <a href="{{ url_for('export') }}" class="btn btn-outline-secondary">
+            Download latest report
+          </a>
+        </div>
+
+        {% if settings %}
+          <div class="mt-auto small text-muted">
+            <div class="mb-1">
+              <strong>Last run status:</strong>
+              {% if settings.last_run_ok is none and not settings.last_run_started %}
+                Never run.
+              {% elif settings.last_run_ok is none and settings.last_run_started and not settings.last_run_finished %}
+                In progress...
+              {% elif settings.last_run_ok %}
+                ✅ Success
+              {% else %}
+                ❌ Failed
+              {% endif %}
+            </div>
+
+            {% if settings.last_run_started %}
+              <div>Started: {{ settings.last_run_started.strftime('%Y-%m-%d %H:%M:%S') }} IST</div>
+            {% endif %}
+            {% if settings.last_run_finished %}
+              <div>Finished: {{ settings.last_run_finished.strftime('%Y-%m-%d %H:%M:%S') }} IST</div>
+            {% endif %}
+            {% if settings.last_run_message %}
+              <div>Message: {{ settings.last_run_message }}</div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h5 class="card-title mb-3">Currently Monitored URLs</h5>
+    {% if urls %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>URL</th>
+              <th>Original MD5</th>
+              <th>Latest MD5</th>
+              <th>Changed?</th>
+              <th>Last Checked</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in urls %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td class="text-break">{{ u.url }}</td>
+                <td><code>{{ u.original_hash or '-' }}</code></td>
+                <td><code>{{ u.latest_hash or '-' }}</code></td>
+                <td>
+                  {% if u.latest_hash %}
+                    {% if u.changed %}
+                      <span class="badge bg-danger">Yes</span>
+                    {% else %}
+                      <span class="badge bg-success">No</span>
+                    {% endif %}
+                  {% else %}
+                    <span class="badge bg-secondary">Not checked yet</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if u.last_checked %}
+                    {{ u.last_checked.strftime('%Y-%m-%d %H:%M:%S') }} IST
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+                <td class="text-end">
+                  <form method="post" action="{{ url_for('delete_url', url_id=u.id) }}"
+                        onsubmit="return confirm('Remove this URL from monitoring?');">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                      Remove
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-muted mb-0">
+        No URLs are being monitored yet. Paste one or more URLs above to get started.
+      </p>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("runNowForm");
+  const btn = document.getElementById("runNowBtn");
+  if (form && btn) {
+    form.addEventListener("submit", function() {
+      btn.disabled = true;
+      btn.innerHTML = 'Running... ' +
+        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+    });
+  }
+});
+</script>
+
+{% endblock %}

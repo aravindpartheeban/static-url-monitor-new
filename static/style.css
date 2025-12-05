@@ -1,0 +1,308 @@
+/* ------------ Global ------------ */
+
+:root {
+    --ff-bg: #050816;
+    --ff-bg-alt: #0b1220;
+    --ff-surface: #111827;
+    --ff-surface-soft: #1f2937;
+    --ff-border-subtle: rgba(148, 163, 184, 0.3);
+    --ff-text-main: #e5e7eb;
+    --ff-text-muted: #9ca3af;
+    --ff-accent: #22c55e;            /* green */
+    --ff-accent-soft: rgba(34, 197, 94, 0.15);
+    --ff-danger: #ef4444;
+    --ff-warning: #f97316;
+    --ff-radius-lg: 18px;
+    --ff-radius-pill: 999px;
+}
+
+/* Main layout */
+.app-body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(circle at top left, #1d2a50 0, #050816 55%);
+    color: var(--ff-text-main);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.app-main {
+    flex: 1;
+}
+
+/* ------------ Navbar ------------ */
+
+.app-navbar {
+    background: rgba(3, 7, 18, 0.96);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+    backdrop-filter: blur(18px);
+}
+
+.app-logo {
+    height: 28px;
+    width: auto;
+}
+
+.brand-text {
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    font-size: 1.0rem;
+}
+
+/* active link underline */
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--ff-text-muted);
+    font-weight: 500;
+}
+
+.navbar-dark .navbar-nav .nav-link.active,
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #f9fafb;
+    position: relative;
+}
+
+.navbar-dark .navbar-nav .nav-link.active::after,
+.navbar-dark .navbar-nav .nav-link:hover::after {
+    content: "";
+    position: absolute;
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 0.15rem;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #22c55e, #0ea5e9);
+}
+
+/* ------------ Cards / Surfaces ------------ */
+
+.card {
+    background: radial-gradient(circle at top left, rgba(55, 65, 81, 0.4), rgba(15, 23, 42, 0.95));
+    border-radius: var(--ff-radius-lg);
+    border: 1px solid var(--ff-border-subtle);
+    color: var(--ff-text-main);
+}
+
+.card-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 1.2rem 1.4rem;
+}
+
+/* ------------ Buttons ------------ */
+
+.btn {
+    border-radius: var(--ff-radius-pill);
+    font-weight: 500;
+    border-width: 1px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #22c55e, #0ea5e9);
+    border: none;
+}
+
+.btn-primary:hover {
+    filter: brightness(1.05);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border: none;
+}
+
+.btn-outline-secondary {
+    color: var(--ff-text-muted);
+    border-color: var(--ff-border-subtle);
+}
+
+.btn-outline-secondary:hover {
+    background: rgba(148, 163, 184, 0.15);
+    color: var(--ff-text-main);
+}
+
+/* Danger pill buttons */
+.btn-outline-danger {
+    border-color: rgba(248, 113, 113, 0.8);
+    color: #fecaca;
+}
+
+.btn-outline-danger:hover {
+    background: rgba(248, 113, 113, 0.12);
+    color: #fee2e2;
+}
+
+/* ------------ Forms ------------ */
+
+.form-control,
+.form-select,
+textarea.form-control {
+    background-color: rgba(15, 23, 42, 0.9);
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    color: var(--ff-text-main);
+}
+
+.form-control:focus,
+.form-select:focus {
+    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.7);
+    border-color: rgba(34, 197, 94, 0.7);
+    background-color: rgba(15, 23, 42, 0.98);
+    color: var(--ff-text-main);
+}
+
+.form-text {
+    color: var(--ff-text-muted);
+}
+
+/* Checkboxes */
+.form-check-input {
+    background-color: #020617;
+    border-color: rgba(148, 163, 184, 0.7);
+}
+
+.form-check-input:checked {
+    background-color: #22c55e;
+    border-color: #22c55e;
+}
+
+/* ------------ Tables ------------ */
+
+.table {
+    color: var(--ff-text-main);
+}
+
+.table thead {
+    background: rgba(15, 23, 42, 0.85);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(31, 41, 55, 0.9);
+}
+
+.table code {
+    font-size: 0.78rem;
+    background: rgba(15, 23, 42, 0.9);
+    padding: 2px 6px;
+    border-radius: 999px;
+}
+
+/* ------------ Badges ------------ */
+
+.badge.bg-success {
+    background-color: rgba(34, 197, 94, 0.25) !important;
+    color: #bbf7d0;
+}
+
+.badge.bg-danger {
+    background-color: rgba(248, 113, 113, 0.25) !important;
+    color: #fecaca;
+}
+
+.badge.bg-secondary {
+    background-color: rgba(148, 163, 184, 0.25) !important;
+    color: #e5e7eb;
+}
+
+/* ------------ Alerts ------------ */
+
+.app-alert {
+    background-color: rgba(30, 64, 175, 0.35);
+    border-color: rgba(96, 165, 250, 0.6);
+    color: #e5e7eb;
+}
+
+/* Bootstrap's default contextual colors still work, but on dark background */
+.alert-success {
+    background-color: rgba(22, 163, 74, 0.25);
+    border-color: rgba(74, 222, 128, 0.5);
+}
+
+.alert-danger {
+    background-color: rgba(185, 28, 28, 0.35);
+    border-color: rgba(248, 113, 113, 0.7);
+}
+
+.alert-warning {
+    background-color: rgba(202, 138, 4, 0.30);
+    border-color: rgba(253, 224, 71, 0.7);
+}
+
+/* ------------ Footer ------------ */
+
+.app-footer {
+    border-top: 1px solid rgba(148, 163, 184, 0.25);
+    background: rgba(3, 7, 18, 0.96);
+    color: var(--ff-text-muted);
+    font-size: 0.8rem;
+}
+
+/* ------------ Misc ------------ */
+
+.text-muted {
+    color: var(--ff-text-muted) !important;
+}
+
+.shadow-sm {
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.8) !important;
+}
+
+/* ------------ Dark tables (override Bootstrap) ------------ */
+
+.table {
+    color: var(--ff-text-main) !important;
+    border-color: rgba(148, 163, 184, 0.3) !important;
+
+    /* override Bootstrap 5 CSS variables for tables */
+    --bs-table-bg: transparent;
+    --bs-table-striped-bg: rgba(15, 23, 42, 0.80);
+    --bs-table-striped-color: var(--ff-text-main);
+    --bs-table-hover-bg: rgba(30, 64, 175, 0.40);
+    --bs-table-hover-color: var(--ff-text-main);
+}
+
+/* make sure cell backgrounds aren't white */
+.table > :not(caption) > * > * {
+    background-color: transparent !important;
+    border-bottom-color: rgba(148, 163, 184, 0.25) !important;
+}
+
+/* header row */
+.table thead {
+    background: radial-gradient(circle at top left,
+        rgba(31, 41, 55, 0.95),
+        rgba(15, 23, 42, 0.98)
+    ) !important;
+}
+
+/* body rows */
+.table tbody tr {
+    background-color: rgba(15, 23, 42, 0.88) !important;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: rgba(11, 15, 25, 0.95) !important;
+}
+
+/* hover state */
+.table-hover tbody tr:hover {
+    background-color: rgba(30, 64, 175, 0.55) !important;
+}
+
+/* Make table text readable on dark background */
+.table th,
+.table td {
+    color: var(--ff-text-main) !important;
+}
+
+/* If any links end up in the table cells */
+.table a {
+    color: var(--ff-text-main) !important;
+    text-decoration: none;
+}
+
+.table a:hover {
+    text-decoration: underline;
+}

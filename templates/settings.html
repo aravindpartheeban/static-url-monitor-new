@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row">
+  <div class="col-lg-6 mb-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Monitoring Settings</h5>
+        <form method="post">
+          <div class="mb-3">
+            <label for="frequency_minutes" class="form-label">
+              Frequency of monitoring (minutes)
+            </label>
+            <input type="number" min="1" class="form-control" id="frequency_minutes"
+                   name="frequency_minutes"
+                   value="{{ settings.frequency_minutes or 60 }}">
+            <div class="form-text">
+              Background job will run every N minutes and email the Excel report.
+            </div>
+          </div>
+
+          <hr>
+
+          <h6 class="mb-3">Email Configuration (SendGrid)</h6>
+          <div class="alert alert-info mb-3">
+            <small>
+              <strong>Azure Deployment:</strong> This app uses SendGrid for email delivery.
+              Configure your SendGrid API key below or set the SENDGRID_API_KEY environment variable.
+            </small>
+          </div>
+          <div class="mb-3">
+            <label for="sendgrid_api_key" class="form-label">SendGrid API Key</label>
+            <input type="password" class="form-control" id="sendgrid_api_key" name="sendgrid_api_key"
+                   value="{{ settings.sendgrid_api_key or '' }}">
+            <div class="form-text">
+              Your SendGrid API key. Can also be set via SENDGRID_API_KEY environment variable.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="smtp_from" class="form-label">From Email</label>
+            <input type="email" class="form-control" id="smtp_from" name="smtp_from"
+                   value="{{ settings.smtp_from or '' }}"
+                   placeholder="sender@example.com">
+            <div class="form-text">
+              Must be a verified sender in your SendGrid account.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="smtp_to" class="form-label">Recipient Email(s)</label>
+            <input type="text" class="form-control" id="smtp_to" name="smtp_to"
+                   value="{{ settings.smtp_to or '' }}"
+                   placeholder="recipient@example.com, recipient2@example.com">
+            <div class="form-text">
+              You can specify multiple addresses separated by commas.
+            </div>
+          </div>
+          
+          <hr>
+          <h6 class="mb-3">Legacy SMTP Configuration (Optional)</h6>
+          <div class="alert alert-warning mb-3">
+            <small>
+              <strong>Note:</strong> SMTP configuration is kept for backward compatibility but is not used in Azure deployment.
+              SendGrid is the recommended email service for Azure Functions.
+            </small>
+          </div>
+          <div class="mb-3">
+            <label for="smtp_host" class="form-label">SMTP Host</label>
+            <input type="text" class="form-control" id="smtp_host" name="smtp_host"
+                   value="{{ settings.smtp_host or '' }}">
+          </div>
+          <div class="mb-3">
+            <label for="smtp_port" class="form-label">SMTP Port</label>
+            <input type="number" class="form-control" id="smtp_port" name="smtp_port"
+                   value="{{ settings.smtp_port or 587 }}">
+          </div>
+          <div class="mb-3">
+            <label for="smtp_user" class="form-label">SMTP Username</label>
+            <input type="text" class="form-control" id="smtp_user" name="smtp_user"
+                   value="{{ settings.smtp_user or '' }}">
+          </div>
+          <div class="mb-3">
+            <label for="smtp_password" class="form-label">SMTP Password</label>
+            <input type="password" class="form-control" id="smtp_password" name="smtp_password"
+                   value="{{ settings.smtp_password or '' }}">
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="smtp_use_tls"
+                   name="smtp_use_tls"
+                   {% if settings.smtp_use_tls %}checked{% endif %}>
+            <label class="form-check-label" for="smtp_use_tls">
+              Use TLS
+            </label>
+          </div>
+
+          <hr>
+
+          <h6 class="mb-3">BrightData Proxy (optional)</h6>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" id="proxy_enabled"
+                   name="proxy_enabled"
+                   {% if settings.proxy_enabled %}checked{% endif %}>
+            <label class="form-check-label" for="proxy_enabled">
+              Enable proxy for HTTP requests
+            </label>
+          </div>
+
+          <div class="mb-3">
+            <label for="proxy_url" class="form-label">Proxy URL</label>
+            <input type="text" class="form-control" id="proxy_url" name="proxy_url"
+                   placeholder="http://proxyhost:port"
+                   value="{{ settings.proxy_url or '' }}">
+          </div>
+          <div class="mb-3">
+            <label for="proxy_username" class="form-label">Proxy Username</label>
+            <input type="text" class="form-control" id="proxy_username"
+                   name="proxy_username"
+                   value="{{ settings.proxy_username or '' }}">
+          </div>
+          <div class="mb-3">
+            <label for="proxy_password" class="form-label">Proxy Password</label>
+            <input type="password" class="form-control" id="proxy_password"
+                   name="proxy_password"
+                   value="{{ settings.proxy_password or '' }}">
+          </div>
+
+          <hr>
+
+          <h6 class="mb-3">Other API Key (optional)</h6>
+          <div class="mb-3">
+            <label for="api_key" class="form-label">
+              Other API Key
+            </label>
+            <input type="text" class="form-control" id="api_key" name="api_key"
+                   value="{{ settings.api_key or '' }}">
+            <div class="form-text">
+              Stored here for convenience; not used directly in the app logic.
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Save settings</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Tips</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2">
+            <strong>Monitoring interval:</strong>
+            Set this according to how sensitive changes are for your URLs.
+          </li>
+          <li class="mb-2">
+            <strong>Email credentials:</strong>
+            Ensure your SMTP credentials are correct, or the app will silently
+            skip sending emails when errors occur.
+          </li>
+          <li class="mb-2">
+            <strong>Proxy:</strong>
+            If you use BrightData or another proxy provider, put the host/port
+            in the Proxy URL field and the credentials in the username/password
+            fields.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

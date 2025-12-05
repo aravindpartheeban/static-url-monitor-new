@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h3 class="card-title mb-3">How it works</h3>
+
+        <p>
+          This tool periodically fetches the content at each URL you configure,
+          computes an <strong>MD5 hash</strong> of the response body, and checks
+          whether the hash has changed since the last run.
+        </p>
+
+        <ol>
+          <li>Add one or more URLs from the <strong>Dashboard</strong>.</li>
+          <li>Configure monitoring frequency and email settings in
+            <strong>Settings</strong>.
+          </li>
+          <li>The background scheduler periodically runs the monitoring job.</li>
+          <li>For each URL:
+            <ul>
+              <li>If it's never been checked before, the MD5 is stored as the original and latest.</li>
+              <li>On subsequent runs, the latest MD5 is compared to the previous one.</li>
+              <li>If they differ, the URL is marked as <em>changed</em>.</li>
+            </ul>
+          </li>
+          <li>An Excel report is generated and emailed after each scheduled run.</li>
+        </ol>
+
+        <hr>
+
+        <h4 class="mb-3">FAQ</h4>
+
+        <h6>What does the Excel file contain?</h6>
+        <p>
+          Each row includes the URL, its original and latest MD5 hashes, a
+          "Changed" flag, and the timestamp of the last check.
+        </p>
+
+        <h6>Does MD5 tell me <em>what</em> changed?</h6>
+        <p>
+          No. MD5 only tells you that the binary content is different. To see
+          the actual difference, you'll need to download or inspect the pages
+          yourself.
+        </p>
+
+        <h6>How do I trigger checks on demand?</h6>
+        <p>
+          On the <strong>Dashboard</strong>, click the
+          <strong>"Run check now"</strong> button. This will:
+        </p>
+        <ul>
+          <li>Run the monitoring logic immediately.</li>
+          <li>Return the Excel report as a file download.</li>
+          <li>Also send the report via email (if SMTP is configured).</li>
+        </ul>
+
+        <h6>What if a URL cannot be fetched?</h6>
+        <p>
+          The app silently logs the error to the console. The URL remains in
+          the monitoring list. In a production deployment you would typically
+          integrate proper logging and alerting.
+        </p>
+
+        <h6>Is BrightData proxy required?</h6>
+        <p>
+          No. It's optional. If disabled, requests are made directly from the
+          host. If enabled, all HTTP(S) requests go through the configured proxy.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
